@@ -45,7 +45,7 @@ def target_postprocessing(texts, special_tokens):
         new_texts.append(text)
     return new_texts
 
-def build_prompt(ingredients, cuisine=None, allergies=None, max_time=None):
+def build_prompt(ingredients, cuisine=None, allergies=None, max_time=None, requests=None):
     prompt = "items: " + ", ".join(ingredients)
     if cuisine and cuisine.lower() != "any":
         prompt += f" | cuisine: {cuisine}"
@@ -53,6 +53,8 @@ def build_prompt(ingredients, cuisine=None, allergies=None, max_time=None):
         prompt += f" | avoid: {allergies}"
     if max_time:
         prompt += f" | max_time: {max_time} mins"
+    if requests:
+        prompt += f" | User requested: {prompt}"
     return prompt
 
 def generate_recipe(text):
@@ -81,6 +83,7 @@ def get_spoonacular_recipes(ingredients):
     return response.json() if response.status_code == 200 else []
 
 class RecipeRequest(BaseModel):
+    requests: str = ""
     ingredients: str
     allergies: str = ""
     cuisine: str = "Any"
