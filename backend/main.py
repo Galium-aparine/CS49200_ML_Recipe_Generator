@@ -92,9 +92,8 @@ def generate(req: RecipeRequest):
     allergies = req.allergies.strip().lower() if req.allergies else ""
     final_prompt = build_prompt(ingredients_list, req.cuisine, allergies, req.max_time)
     # code changed here
-    recipe_output = []
-    generated = generate_recipe(final_prompt)
     for i in range(5):
+        generated = generate_recipe(final_prompt)
         for text in generated:
             sections = text.split("\n")
             headline = ""
@@ -112,7 +111,7 @@ def generate(req: RecipeRequest):
                 if headline == "TITLE":
                     print(f"[{headline}]: {section.strip().capitalize()}")
                 else:
-                    section_info = [f"  - {i+1}: {info.strip().capitalize()}" for i, info in enumerate(section.split("--"))]
+                    section_info = [f"\n {i+1}: {info.strip().capitalize()}" for i, info in enumerate(section.split("--"))]
                     print(f"[{headline}]:")
                     print("\n".join(section_info))
 
